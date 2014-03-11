@@ -13,7 +13,8 @@ $domains = array(
 	"totl.net",
 	"ecs.soton.ac.uk",
 	"eprints.org",
-	"microsoft.com" );
+	"microsoft.com",
+	"communitymodel.sharepoint.com" );
 
 $ttl = 10;
 foreach( $domains as $domain )
@@ -21,8 +22,10 @@ foreach( $domains as $domain )
 	$url = "http://$domain/";
 		
 	$curl = new mycurl( true, 10, 10 );
-	$curl->createCurl( $url );
 
+
+	$curl->createCurl( $url );
+	
 	$result = $plugins->applyTo( $curl );
 
 	print "\n$domain:\n";

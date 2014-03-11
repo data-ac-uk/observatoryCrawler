@@ -20,7 +20,7 @@ class mycurl {
      public $webpage;
      public $text;
      protected $_responseHeaders;
-     protected $_includeHeader;
+     protected $_includeHeader = true;
      protected $_noBody;
      protected $_status;
      protected $_info;
@@ -41,7 +41,7 @@ class mycurl {
        $this->auth_pass = $pass;
      }
 
-     public function __construct($url,$followlocation = true,$timeOut = 30,$maxRedirecs = 4,$binaryTransfer = false,$includeHeader = false,$noBody = false)
+     public function __construct($url,$followlocation = true,$timeOut = 30,$maxRedirecs = 4,$binaryTransfer = false,$includeHeader = true,$noBody = false)
      {
          $this->_url = $url;
          $this->_followlocation = $followlocation;
@@ -80,8 +80,8 @@ class mycurl {
         if($url != 'nul'){
           $this->_url = $url;
         }
-
-         $s = curl_init();
+		
+	    $s = curl_init();
 
          curl_setopt($s,CURLOPT_URL,$this->_url);
          curl_setopt($s,CURLOPT_HTTPHEADER,array('Expect:'));
@@ -120,9 +120,20 @@ class mycurl {
          curl_setopt($s,CURLOPT_USERAGENT,$this->_useragent);
          curl_setopt($s,CURLOPT_REFERER,$this->_referer);
 
-         $this->webpage = curl_exec($s);
+         $this->_webpage = curl_exec($s);
          $this->_status = curl_getinfo($s,CURLINFO_HTTP_CODE);
          $this->_info = curl_getinfo($s);
+
+         if($this->_includeHeader)
+         {
+             $this->headers = substr($this->_webpage,0,$this->_info['header_size']);
+             $this->webpage = substr($this->_webpage,$this->_info['header_size']);
+         }else{
+         	 $this->webpage =  $this->_webpage;
+         }
+		 
+		 unset( $this->_webpage );
+
 
          $this->text = strip_tags( $this->webpage );
          curl_close($s);
