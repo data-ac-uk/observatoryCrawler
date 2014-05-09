@@ -3,8 +3,6 @@ observatoryCrawler
 
 Install
 ```bash
-mkdir lib
-mkdir var
 cd lib
 git clone https://github.com/cgutteridge/Graphite.git
 git clone https://github.com/semsol/arc2.git
