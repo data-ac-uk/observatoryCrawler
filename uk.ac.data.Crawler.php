@@ -1,6 +1,9 @@
 <?php
 
 include_once('lib/fatfree/lib/base.php');
+
+error_reporting(0);
+
 include_once('lib/phpCurl.php');
 
 class ukacdataCrawler {

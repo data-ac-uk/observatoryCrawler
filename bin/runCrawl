@@ -32,12 +32,25 @@ define('TIME_ONEWEEK', 7 * 4 * 3600);
 chdir(__DIR__);
 
 $tasks = array(
+
+	"addDomainsACUK" => array(
+		"cmd" => "./addDomainsACUK",
+		"every"=> TIME_ONEWEEK,
+	),
 	"domainCrawl" => array(
 		"cmd" => "./domainCrawl",
 		"every"=> TIME_ONEWEEK,
 	),
 	"websiteCrawl" => array(
 		"cmd" => "./websiteCrawl",
+		"every"=> TIME_ONEWEEK,
+	),
+	"exportLatestCrawlProfile" => array(
+		"cmd" => "./exportLatestCrawlProfile",
+		"every"=> TIME_ONEWEEK,
+	),
+	"syncWebsite" => array(
+		"cmd" => "./syncWebsite",
 		"every"=> TIME_ONEWEEK,
 	),
 );

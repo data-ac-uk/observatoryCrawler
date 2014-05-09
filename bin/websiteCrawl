@@ -17,7 +17,7 @@ $_SERVER['SERVER_PORT'] = '0';
 	
 	$mysqldate_start = date( $crawler->config->date->mysql );
 
-	require_once( "{$crawler->config->pwd}/lib/Observe/Observe.php" );
+	require_once( "{$crawler->config->pwd}/lib/Observe/lib/Observe.php" );
 
 	require_once( "{$crawler->config->pwd}/lib/arc2/ARC2.php" );
 	require_once( "{$crawler->config->pwd}/lib/Graphite/Graphite.php" );
