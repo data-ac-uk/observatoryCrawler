@@ -25,7 +25,7 @@
 	
 	$mysqldate = date( $crawler->config->date->mysqldate );
 
-	$datafile = "{$crawler->config->pwd}/var/data/profiles/archive/$mysqldate.json";
+	$datafile = "{$crawler->config->pwd}/var/data/observations/archive/$mysqldate.json";
 	
 	if(!file_exists(dirname($datafile))){
 		@mkdir(dirname($datafile), 0777,true);
@@ -34,7 +34,7 @@
 	
 	file_put_contents($datafile, json_encode( $data ));
 	
-	copy($datafile, "{$crawler->config->pwd}/var/data/profiles/latest.json");
+	copy($datafile, "{$crawler->config->pwd}/var/data/observations/latest.json");
 	
 	`gzip $datafile`;
 	
