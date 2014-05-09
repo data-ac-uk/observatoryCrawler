@@ -1,8 +1,12 @@
+#!/bin/env php
 <?php
 
+	$base_dir = dirname( __DIR__ );
 
-	include '../uk.ac.data.Crawler.php';
+	include $base_dir.'/uk.ac.data.Crawler.php';
 	
+	$crawler = new ukacdataCrawler();
+
 	
 	$test404 = "/I_am_trying_to_test_your_404_response_".date("Y-m-d");
 	
@@ -20,8 +24,6 @@
 	}
 	
 	
-	$crawler = new ukacdataCrawler();
-
 	$crawler->curl_launch();
 	
 	$mysqldate = date( $crawler->config->date->mysql );
