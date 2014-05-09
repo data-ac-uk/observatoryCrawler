@@ -1,0 +1,8 @@
+#!/bin/env php
+<?php
+
+	$base_dir = dirname( __DIR__ );
+	include $base_dir.'/uk.ac.data.Crawler.php';
+	
+	$crawler = new ukacdataCrawler();
+	$domain = $crawler->addDomain("soton.ac.uk");
