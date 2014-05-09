@@ -34,7 +34,7 @@
 	
 	file_put_contents($datafile, json_encode( $data ));
 	
-	copy($datafile, "{$crawler->config->pwd}/var/data/profiles/latest.json";)
+	copy($datafile, "{$crawler->config->pwd}/var/data/profiles/latest.json");
 	
 	`gzip $datafile`;
 	
