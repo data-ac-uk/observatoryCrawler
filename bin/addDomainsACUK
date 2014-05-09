@@ -25,7 +25,9 @@
 	$exec = "{$crawler->config->pwd}/lib/dnswalk ac.uk. 2> /dev/null | sort | uniq  > $acuks ";
 	`$exec`;
 	
-
+	if(!file_exists("{$crawler->config->pwd}/var/data/dnswalk/archive/")){
+		@mkdir("{$crawler->config->pwd}/var/data/dnswalk/archive/", 0777,true);
+	}
 	`gz -c $acuks > {$crawler->config->pwd}/var/data/dnswalk/archive/$mysqldate.txt.gz`;
 	
 	$handle = @fopen($acuks, "r");
