@@ -67,7 +67,7 @@ class ukacdataCrawler {
 				$ins['domain_org'] = $ins['domain_onbehalfof'];
 			}
 		}
-		$ins['domain_whois'] = curl($result);
+		$ins['domain_whois'] = json_encode($result);
 		$ins['domain_enabled'] = 1;
 		
 		$ins['domain_src'] = $src;
