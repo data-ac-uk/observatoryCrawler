@@ -20,9 +20,9 @@
 	$config->crawl->emailTo = array("andy@data.ac.uk");
 
 	
-	if(file_exists("{$config->pwd}/etc/config.php"))
+	if(file_exists("{$config->pwd}/etc/config.local.php"))
 	{
-		require("{$config->pwd}/etc/config.php");
+		require("{$config->pwd}/etc/config.local.php");
 	}
 
 
