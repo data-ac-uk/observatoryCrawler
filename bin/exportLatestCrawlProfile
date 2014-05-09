@@ -23,5 +23,15 @@
 
 	}
 	
-	print json_encode( $data );
+	$mysqldate = date( $crawler->config->date->mysqldate );
+
+	$datafile = "{$crawler->config->pwd}/var/data/profiles/$mysqldate.json";
+	
+	if(!file_exists(dirname($datafile))){
+		@mkdir(dirname($datafile), 0777,true);
+	}
+	
+	
+	file_put_contents($datafile, json_encode( $data );
+	
 	
