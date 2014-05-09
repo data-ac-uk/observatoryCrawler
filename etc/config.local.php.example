@@ -1,0 +1,8 @@
+<?php
+
+	$config->db = (object) NULL;
+	$config->db->connection = "mysql:host=localhost;port=3306;dbname=crawler";
+	$config->db->user = 'crawler';
+	$config->db->password = 'uu373WUn';
+	$config->db->password = 'crawler';
+

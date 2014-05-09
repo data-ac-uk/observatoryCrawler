@@ -11,6 +11,8 @@ class ukacdataCrawler {
 		
 		require(__DIR__."/etc/config.php");
 		
+		$this->config = $config;
+		
 		$this->launch_db();
 	}
 	
