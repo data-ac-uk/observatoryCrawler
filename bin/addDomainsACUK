@@ -22,7 +22,7 @@
 		@mkdir(dirname($acuks), 0777,true);
 	}
 	
-	echo $exec = "{$crawler->config->pwd}/lib/dnswalk ac.uk. 2> /dev/null | sort | uniq  > $acuks ";
+	$exec = "{$crawler->config->pwd}/lib/dnswalk ac.uk. 2> /dev/null | sort | uniq  > $acuks ";
 	`$exec`;
 	
 	$handle = @fopen($acuks, "r");

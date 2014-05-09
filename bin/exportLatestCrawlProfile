@@ -32,6 +32,6 @@
 	}
 	
 	
-	file_put_contents($datafile, json_encode( $data );
+	file_put_contents($datafile, json_encode( $data ));
 	
 	
