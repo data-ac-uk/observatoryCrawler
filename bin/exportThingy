@@ -1,0 +1,20 @@
+#!/bin/env php
+<?php
+
+	$base_dir = dirname( __DIR__ );
+
+	include $base_dir.'/uk.ac.data.Crawler.php';
+	
+	$crawler = new ukacdataCrawler();
+
+
+	$rows = $crawler->db->fetch_many('websites', array(), array(),"site_pdomain,site_profile");
+
+	$data = array();
+	foreach( $rows as $row )
+	{
+		$data[ $row["site_pdomain"] ] = $row["site_profile"];
+	}
+	
+	print json_encode( $data );
+	

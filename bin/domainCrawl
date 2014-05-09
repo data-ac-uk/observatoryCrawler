@@ -1,0 +1,63 @@
+#!/bin/env php
+<?php
+
+        $base_dir = dirname( __DIR__ );
+
+        include $base_dir.'/uk.ac.data.Crawler.php';
+
+
+	
+	$crawler = new ukacdataCrawler();
+
+	$mysqldate = date( $crawler->config->date->mysql );
+
+	$loop = true;
+	while($loop){
+			
+		$res = $crawler->db->fetch_one('domains', array('domain_lastcrawled' => "<:{$mysqldate}"));
+		
+		if(!isset($res['domain_domain'])) break;
+		
+		echo $res['domain_domain']."\n";
+		foreach(array("www.{$res['domain_domain']}") as $dom){ //Only looking at www.
+		
+			$result = dns_get_record($dom);
+			
+			foreach($result as $r){
+				$ins = array('dns_type'=>$r['type'], 'dns_domain'=>$dom, 'dns_ttl'=>$r['ttl'], 'dns_seen'=>$mysqldate, 'dns_pdomain'=> $res['domain_domain'], 'dns_ena'=>1);
+				switch($r['type']){
+					case "A":
+						$ins['dns_key'] = "{$dom}:{$r['type']}:{$r['ip']}";	
+						$ins['dns_data'] = "{$r['ip']}";	
+					break;
+					case "AAAA":
+						$ins['dns_key'] = "{$dom}:{$r['type']}:{$r['ipv6']}";	
+						$ins['dns_data'] = "{$r['ipv6']}";	
+					break;
+					case "CNAME":
+					case "NS":
+						$ins['dns_key'] = "{$dom}:{$r['type']}:{$r['target']}";	
+						$ins['dns_data'] = "{$r['target']}";	
+					break;
+					case "MX":
+						$ins['dns_key'] = "{$dom}:{$r['type']}:{$r['target']}:{$r['pri']}";	
+						$ins['dns_data'] = "{$r['target']}:{$r['pri']}";	
+					break;
+					default: 
+				
+						continue(2);
+				}
+				$crawler->db->insert('dns',  $ins, array(), 'REPLACE');
+			}
+			
+			$crawler->db->update('dns', array('dns_ena' => "0"), array(),  array( 'dns_seen' => "<:{$mysqldate}", 'dns_domain'=>$dom ));
+		}
+		
+		$crawler->db->update('domains', array('domain_lastcrawled' => "{$mysqldate}"), array(), array('domain_domain' => $res['domain_domain']));
+		
+	}
+
+	
+	
+	
+	

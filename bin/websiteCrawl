@@ -1,0 +1,126 @@
+#!/bin/env php
+<?php
+
+        $base_dir = dirname( __DIR__ );
+
+        include $base_dir.'/uk.ac.data.Crawler.php';
+
+$_SERVER['SERVER_PROTOCOL'] = 'cli';
+$_SERVER['SERVER_PORT'] = '0';
+
+	ini_set('memory_limit','256M');
+
+	
+	
+	$crawler = new ukacdataCrawler();
+	
+	
+	$mysqldate_start = date( $crawler->config->date->mysql );
+
+	require_once( "{$crawler->config->pwd}/lib/Observe/Observe.php" );
+
+	require_once( "{$crawler->config->pwd}/lib/arc2/ARC2.php" );
+	require_once( "{$crawler->config->pwd}/lib/Graphite/Graphite.php" );
+	
+	$plugins = CensusPluginRegister::instance();
+	$plugins->loadDir( "{$crawler->config->pwd}/lib/Observe/plugins.d" );
+
+
+	$loop = true;
+	while($loop){
+		
+		$sql = "SELECT * 
+			FROM (
+				SELECT DISTINCT  `dns_domain`, `dns_pdomain` FROM  `dns` WHERE  `dns_type` IN ('A',  'AAAA',  'CNAME')
+			) AS  `t_dns` 
+		LEFT OUTER JOIN  `websites` ON  `t_dns`.`dns_domain` =  `websites`.`site_domain` 
+			WHERE  `site_crawled` IS NULL OR  `site_crawled` < ? 
+		ORDER BY  `websites`.`site_crawled` ASC LIMIT 1";
+		
+		$res = $crawler->db->exec($sql, array(1=> $mysqldate_start));
+		
+		$mysqldate = date( $crawler->config->date->mysql );
+			
+		if(!isset($res[0])) break;
+		$res = $res[0];
+		
+		$testurl = "http://{$res['dns_domain']}/";
+		$ins = array();
+		echo $testurl."\n";
+		$go = true;
+		$crawler->curl_launch();
+		
+		$ins['site_status'] = "";
+
+		$ins['site_url'] = $testurl;
+		$ins['site_domain'] = $res['dns_domain'];
+		$ins['site_pdomain'] = $res['dns_pdomain'];
+		
+		$robots = $crawler->curl_get( "{$testurl}robots.txt" );
+		switch($robots['crawl_httpcode']){
+			case "200":
+				if(!$crawler->robots_parse("/", $robots['crawl_content'])){
+					$go = false;
+					$ins['site_status'] = 'RobotsSaidNo';
+				}
+			break;
+		}
+		
+		$ins['site_robots'] = $robots['crawl_id'];
+		if($go){
+			$page = $crawler->curl_get( "$testurl" );
+			if($page === false || $page['crawl_httpcode'] == 0){
+				$ins['site_status'] = "CouldNotLoad";
+			}else{
+				if($page['crawl_httpcode'] == 200){
+					$ins['site_status'] = 'OK';
+					$ins['site_url'] = $page['crawl_url'];
+				}else{
+					$ins['site_status'] = "Not OK ({$page['crawl_httpcode']})";
+				}
+				$ins['site_crawl']= $page['crawl_id'];
+			}
+		}
+		$ins['site_crawled'] = $mysqldate;
+		
+		
+		if($robots['crawl_httpcode']==200){
+			$pattern = '/Sitemap: ([^\s]+)/';
+
+			preg_match_all($pattern, $robots['crawl_content'], $match);
+
+			foreach ($match[1] as $sitemap)
+			{
+			   	$sitemaps = $crawler->curl_get( $sitemap );
+				$crawler->db->insert('sitemaps',  array("sitemap_url"=>$sitemap,"sitemap_domain"=>$ins['site_domain'],"sitemap_crawl"=>$sitemaps['crawl_id'], "sitemap_crawled"=>$mysqldate), array(), 'REPLACE');
+			}			
+		
+		}
+		
+		
+		if($ins['site_status'] == 'OK'){
+		
+			$curl = (object) NULL;
+			$curl->webpage = $page['crawl_content'];
+			$curl->text = $page['crawl_text'];
+		
+			$result = $plugins->applyTo( $curl );
+			
+			$ins['site_profile'] = json_encode($result);
+
+			$graph = new Graphite();
+			$graph->ns( "obsacuk", "http://observatory.data.ac.uk/vocab#" );
+			$plugins->resultsToGraph( $graph, $result, $res['dns_domain'], date("c", strtotime($page['crawl_timestamp'])) );
+			$ins['site_profile_ttl'] = $graph->serialize("NTriples");
+			
+			unset($graph);
+
+		}
+		
+		$crawler->db->insert('websites',  $ins, array(), 'REPLACE');
+		
+		
+		
+	}
+
+	
