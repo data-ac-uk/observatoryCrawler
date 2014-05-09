@@ -16,7 +16,7 @@
 	
 	$tld = new TLDExtract();
 	
-	$acuks = "{$crawler->config->pwd}/var/data/dnswalk/$mysqldate.txt";
+	$acuks = "{$crawler->config->pwd}/var/data/dnswalk/latest.txt";
 	
 	if(!file_exists(dirname($acuks))){
 		@mkdir(dirname($acuks), 0777,true);
@@ -24,6 +24,9 @@
 	
 	$exec = "{$crawler->config->pwd}/lib/dnswalk ac.uk. 2> /dev/null | sort | uniq  > $acuks ";
 	`$exec`;
+	
+
+	`gz -c $acuks > {$crawler->config->pwd}/var/data/dnswalk/archive/$mysqldate.txt.gz`;
 	
 	$handle = @fopen($acuks, "r");
 	if ($handle) {
