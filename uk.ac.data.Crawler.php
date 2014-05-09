@@ -18,6 +18,7 @@ class ukacdataCrawler {
 		
 		$config->date = (object) NULL;
 		$config->date->mysql = 'Y-m-d H:i:s';
+		$config->date->mysqldate = 'Y-m-d';
 		
 		$config->crawl = (object) NULL;
 		$config->crawl->cache = 24; //in Hours
