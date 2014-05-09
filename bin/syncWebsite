@@ -1,0 +1,16 @@
+#!/bin/env php
+<?php
+
+	$base_dir = dirname( __DIR__ );
+
+	include $base_dir.'/uk.ac.data.Crawler.php';
+	
+	$crawler = new ukacdataCrawler();
+
+	ini_set('memory_limit','256M');
+
+	$datafile = "{$crawler->config->pwd}/var/data";
+	
+	`rsync -av $datafile {$crawler->config->websitedatalocation}`;
+	
+	

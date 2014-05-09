@@ -19,6 +19,7 @@
 	$config->crawl->locationlimit = 10;
 	$config->crawl->emailTo = array("andy@data.ac.uk");
 
+	$config->websitedatalocation = "dataacuk@example.com:path/.";
 	
 	if(file_exists("{$config->pwd}/etc/config.local.php"))
 	{
