@@ -7,14 +7,17 @@
 	
 	$crawler = new ukacdataCrawler();
 
+	ini_set('memory_limit','256M');
 
-	$rows = $crawler->db->fetch_many('websites', array(), array(),"*" );
+	$rows = $crawler->db->fetch_many('websites', array(), array(),"site_url,site_domain,site_pdomain,site_firstseen,site_crawled,site_crawl,site_robots,site_status" );
 
 	$data = array();
 	foreach( $rows as $row )
 	{
+		
+		
 		if($row['site_crawl']){
-			$row['crawl']  = $crawler->db->fetch_one('crawls', array('crawl_id'=>$row['site_crawl']),array(),"crawl_id,crawl_url,crawl_httpcode,crawl_header,crawl_info,crawl_timestamp");
+			$row['crawl']  = $crawler->db->fetch_one('crawls', array('crawl_id'=>$row['site_crawl']),array(),"crawl_id,crawl_url,crawl_httpcode,crawl_header,crawl_info,crawl_timestamp,crawl_content");
 			 $row['crawl']['crawl_info'] = json_decode($row['crawl']['crawl_info']); 	
 		}
 		$row['site_profile'] = json_decode( $row['site_profile'] );
