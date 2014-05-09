@@ -20,7 +20,6 @@
 			$row['crawl']  = $crawler->db->fetch_one('crawls', array('crawl_id'=>$row['site_crawl']),array(),"crawl_id,crawl_url,crawl_httpcode,crawl_header,crawl_info,crawl_timestamp,crawl_content");
 			 $row['crawl']['crawl_info'] = json_decode($row['crawl']['crawl_info']); 	
 		}
-		$row['site_profile'] = json_decode( $row['site_profile'] );
 		$data[ $row["site_pdomain"] ] = $row;
 
 	}
