@@ -1,13 +1,11 @@
+#!/bin/env php
 <?php
 
-
-	include '../uk.ac.data.Crawler.php';
-	
-	
+	$base_dir = dirname( __DIR__ );
+	include $base_dir.'/uk.ac.data.Crawler.php';
 	
 	$crawler = new ukacdataCrawler();
-	
-	
+		
 	if (($handle = fopen("http://learning-provider.data.ac.uk/data/learning-providers.csv", "r")) !== FALSE) {
 	    # Set the parent multidimensional array key to 0.
 	    $nn = 0;
