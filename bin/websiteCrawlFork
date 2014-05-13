@@ -185,7 +185,8 @@
  			$curl = (object) NULL;
  			$curl->webpage = $page['crawl_content'];
  			$curl->text = $page['crawl_text'];
-
+			$curl->info = json_encode($page['crawl_info']);
+			
  			$result = $plugins->applyTo( $curl );
 
  			$ins['site_profile'] = json_encode($result);
