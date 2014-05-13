@@ -26,7 +26,7 @@
 	
 	if (! function_exists('pcntl_fork')) die('PCNTL functions not available on this PHP installation');
 
-	$noforks = 5;
+	$noforks = $crawler->config->crawl->forks;
 	
 	$sql = "SELECT * 
 		FROM (

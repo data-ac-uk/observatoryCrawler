@@ -18,6 +18,7 @@
 	$config->crawl->agent = 'AcUkCrawler';
 	$config->crawl->locationlimit = 10;
 	$config->crawl->emailTo = array("andy@data.ac.uk");
+	$config->crawl->forks = 4;
 
 	$config->websitedatalocation = "dataacuk@example.com:path/.";
 	
