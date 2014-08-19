@@ -1,0 +1,52 @@
+#!/bin/env php
+<?php
+
+	$base_dir = dirname( __DIR__ );
+
+	include $base_dir.'/uk.ac.data.Crawler.php';
+	
+	$crawler = new ukacdataCrawler();
+
+	ini_set('memory_limit','256M');
+
+	$rows = $crawler->db->fetch_many('websites', array(), array(),"*" );
+
+	
+	
+
+	$data = array();
+	foreach( $rows as $row )
+	{
+		if($row['site_crawl']){
+			$row['crawl']  = $crawler->db->fetch_one('crawls', array('crawl_id'=>$row['site_crawl']),array(),"crawl_id,crawl_url,crawl_httpcode,crawl_header,crawl_info,crawl_timestamp");
+			 $row['crawl']['crawl_info'] = json_decode($row['crawl']['crawl_info']); 	
+		}
+		$row['site_profile'] = json_decode( $row['site_profile'] );
+		print_r($row);
+		if($row['site_profile']->opd !== false){
+			
+			$data[ $row["site_domain"] ] = (string)$row['site_profile']->opd;
+		
+		}
+
+	}
+	
+	print_r($data);
+	exit();
+	
+	$mysqldate = date( $crawler->config->date->mysqldate );
+
+	$datafile = "{$crawler->config->pwd}/var/data/opds/archive/$mysqldate.json";
+	
+	if(!file_exists(dirname($datafile))){
+		@mkdir(dirname($datafile), 0777,true);
+	}
+	
+	
+	file_put_contents($datafile, json_encode( $data ));
+	
+	copy($datafile, "{$crawler->config->pwd}/var/data/opds/latest.json");
+	
+	`gzip $datafile`;
+	
+	
