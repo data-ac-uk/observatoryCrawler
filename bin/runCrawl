@@ -41,12 +41,16 @@ $tasks = array(
 		"cmd" => "./domainCrawl",
 		"every"=> TIME_ONEWEEK,
 	),
-	"websiteCrawl" => array(
-		"cmd" => "./websiteCrawl",
+	"websiteCrawlFork" => array(
+		"cmd" => "./websiteCrawlFork",
 		"every"=> TIME_ONEWEEK,
 	),
 	"exportLatestCrawlProfile" => array(
 		"cmd" => "./exportLatestCrawlProfile",
+		"every"=> TIME_ONEWEEK,
+	),
+	"exportLatestCrawlContent" => array(
+		"cmd" => "./exportLatestCrawlContent",
 		"every"=> TIME_ONEWEEK,
 	),
 	"syncWebsite" => array(
