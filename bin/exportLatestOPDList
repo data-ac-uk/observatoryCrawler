@@ -22,11 +22,8 @@
 			 $row['crawl']['crawl_info'] = json_decode($row['crawl']['crawl_info']); 	
 		}
 		$row['site_profile'] = json_decode( $row['site_profile'] );
-		print_r($row);
-		if($row['site_profile']->opd !== false){
-			
+		if(isset($row['site_profile']->opd) && $row['site_profile']->opd !== false){
 			$data[ $row["site_domain"] ] = (string)$row['site_profile']->opd;
-		
 		}
 
 	}

@@ -49,6 +49,7 @@
 	}
 	
 	$sql = "SELECT Count(*) as thiscount FROM `websites` WHERE `site_fork` = 0";
+
 	$res = $crawler->db->exec($sql);
 	$thiscount = $res[0]['thiscount'];
 	$pagesize = ceil($thiscount/$noforks);
@@ -185,10 +186,9 @@
  			$curl = (object) NULL;
  			$curl->webpage = $page['crawl_content'];
  			$curl->text = $page['crawl_text'];
-			$curl->info = json_encode($page['crawl_info']);
-			
+			$curl->info = json_decode($page['crawl_info'], true);
  			$result = $plugins->applyTo( $curl );
-
+			
  			$ins['site_profile'] = json_encode($result);
 
  			$graph = new Graphite();
