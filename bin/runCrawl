@@ -53,6 +53,10 @@ $tasks = array(
 		"cmd" => "./exportLatestCrawlContent",
 		"every"=> TIME_ONEWEEK,
 	),
+	"exportLatestOPDList" => array(
+		"cmd" => "./exportLatestOPDList",
+		"every"=> TIME_ONEWEEK,
+	),
 	"syncWebsite" => array(
 		"cmd" => "./syncWebsite",
 		"every"=> TIME_ONEWEEK,

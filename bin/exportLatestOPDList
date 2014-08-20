@@ -41,6 +41,6 @@
 	
 	copy($datafile, "{$crawler->config->pwd}/var/data/opds/latest.json");
 	
-	`gzip $datafile`;
+	`gzip -f $datafile`;
 	
 	
