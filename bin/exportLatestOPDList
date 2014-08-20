@@ -28,9 +28,6 @@
 
 	}
 	
-	print_r($data);
-	exit();
-	
 	$mysqldate = date( $crawler->config->date->mysqldate );
 
 	$datafile = "{$crawler->config->pwd}/var/data/opds/archive/$mysqldate.json";
