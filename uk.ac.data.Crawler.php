@@ -143,6 +143,13 @@ class ukacdataCrawler {
 	function robots_parse($path, $robotstxt)
 	{
 		
+		//Checks to see if $robotstxt is a txt file.
+		$finfo = new finfo(FILEINFO_MIME);
+		$mtype = $finfo->buffer($robotstxt);
+		if(substr($mytype,0,10)!="text/plain"){
+			return true;
+		}
+		
 		$useragent = $this->config->crawl->agent ;
 	    // parse url to retrieve host and path
 	   
